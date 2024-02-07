@@ -27,9 +27,3 @@ class DBHealthCheck(APIView):
 
     def options(self, request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        
-    def http_internal_server_error(request, exception):
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    def http_method_not_allowed(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
