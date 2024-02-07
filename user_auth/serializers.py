@@ -20,6 +20,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'password', 'firstname','lastname', 'account_created', 'account_updated')
 
     def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        if password is not None:
+            instance.set_password(password)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()

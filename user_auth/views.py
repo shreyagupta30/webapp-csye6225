@@ -21,7 +21,7 @@ class GetUserAuthViewSet(GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        if not set(request.data.keys()).issubset(set(UpdateUserSerializer.Meta.fields)):
+        if not set(request.data.keys()).issubset(set(['firstname', 'lastname', 'password'])):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = UpdateUserSerializer(request.user, data=request.data, partial=True)
         if not serializer.is_valid():
