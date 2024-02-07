@@ -1,4 +1,4 @@
-name: Execute django tests
+name: Execute django environment
 
 on: [push, pull_request]
 
