@@ -136,4 +136,5 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
     ],
+    'EXCEPTION_HANDLER': 'webapp.custom_exception_handler.custom_exception_handler',
 }
