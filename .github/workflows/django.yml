@@ -39,3 +39,6 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev
+
+      - name: Run Fail
+        run: exit 1
