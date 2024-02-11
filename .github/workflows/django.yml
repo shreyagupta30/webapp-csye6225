@@ -40,5 +40,5 @@ jobs:
         run: |
           pipenv install --deploy --dev
 
-      # - name: Run Fail
-      #   run: exit 1
+      - name: Run Fail
+        run: exit 1
