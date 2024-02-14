@@ -122,3 +122,8 @@ This is an authenticated route, the user must be authenticated to modify only fi
 - lastname
 
 If the user tries to change fields like `username`, `account_created` and `account_updated` the status code `400 BAD REQUEST` is raised. 
+
+
+#References:
+
+1- setup test for gh - https://github.com/marketplace/actions/setup-postgresql-for-linux-macos-windows

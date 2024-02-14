@@ -10,6 +10,14 @@ jobs:
       matrix:
         python-version: [3.11]
 
+    env:
+      DJANGO_SECRET_KEY: ${{secrets.DJANGO_SECRET_KEY }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+
     steps:
       - name: Checkout the projects code
         uses: actions/checkout@v2
@@ -33,6 +41,14 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev
+
+      - uses: ikalnytskyi/action-setup-postgres@v5
+        with:
+          username: ${{ env.DB_USER }}
+          password: ${{ env.DB_PASSWORD }}
+          database: ${{ env.DB_NAME }}
+          port: ${{ env.DB_PORT }}
+        id: postgres
 
       - name: Run migrations
         run: |
