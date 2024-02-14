@@ -1,13 +1,7 @@
 name: Execute django environment
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+  pull_request
 
 jobs:
   build:
@@ -39,6 +33,10 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev
+
+      - name: Run tests
+        run: |
+          pytest
 
       # - name: Run Fail
       #   run: exit 1
