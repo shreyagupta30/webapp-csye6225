@@ -26,6 +26,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      
+      - name: install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
 
       - name: Install pipenv
         run: |
@@ -37,11 +42,6 @@ jobs:
           path: ~/.local/share/virtualenvs/
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
-      - name: Install dependencies
-        if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: |
-          pipenv install --deploy --dev
-
       - uses: ikalnytskyi/action-setup-postgres@v5
         with:
           username: ${{ env.DB_USER }}
@@ -49,6 +49,10 @@ jobs:
           database: ${{ env.DB_NAME }}
           port: ${{ env.DB_PORT }}
         id: postgres
+
+      - name: Install dependencies
+        run: |
+          pipenv install --deploy --ignore-pipfile
 
       - name: Run migrations
         run: |
