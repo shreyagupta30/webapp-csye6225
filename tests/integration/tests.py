@@ -22,7 +22,6 @@ class TestIntegration(TestCase):
 
     def test_create_user(self):
         response = self.api_client.post(self.create_user_url, self.user_data)
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.api_client.credentials(HTTP_AUTHORIZATION='Basic ' + self.credentials)
