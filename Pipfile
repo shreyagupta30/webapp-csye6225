@@ -11,7 +11,8 @@ psycopg2-binary = "*"
 whitenoise = "*"
 drf-yasg = "*"
 djangorestframework-simplejwt = "*"
-pytest = "*"
 bcrypt = "*"
+pytest = "*"
+pytest-django = "*"
 
 [dev-packages]

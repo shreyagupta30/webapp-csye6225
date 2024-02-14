@@ -8,6 +8,8 @@ class UserAuthViewSet(GenericAPIView):
 
     def post(self, request):
         serializer = CreateUserSerializer(data=request.data)
+        if not set(request.data.keys()).issubset(set(['firstname', 'lastname', 'password', 'username'])):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -27,4 +29,4 @@ class GetUserAuthViewSet(GenericAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
