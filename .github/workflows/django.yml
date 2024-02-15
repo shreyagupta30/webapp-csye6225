@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pipenv
-          pipenv install --deploy --ignore-pipfile
+          pipenv install --system --deploy --ignore-pipfile
 
       - name: Run migrations
         run: |
