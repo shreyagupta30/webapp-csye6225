@@ -42,7 +42,7 @@ class TestIntegration(TestCase):
         response = self.api_client.put(self.get_user_url, updated_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        updated_credentials = base64.b64encode('testinguser@test.com:passwordset@123'.encode('utf-8')).decode('utf-8')
+        updated_credentials = base64.b64encode('testinguser@test.com:passwordset'.encode('utf-8')).decode('utf-8')
         self.api_client.credentials(HTTP_AUTHORIZATION='Basic ' + updated_credentials)
         response = self.api_client.get(self.get_user_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
