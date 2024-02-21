@@ -12,7 +12,7 @@ build {
   sources = ["sources.googlecompute.centos-csye"]
 
   provisioner "shell" {
-    script = [
+    scripts = [
       "./packer_setup/setup_db.sh",
     ]
   }
