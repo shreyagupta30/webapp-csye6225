@@ -4,8 +4,9 @@ on:
   pull_request
 
 jobs:
-  build:
+  packer_ci:
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout the projects code
