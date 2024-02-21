@@ -1,0 +1,25 @@
+name: Packer CI
+
+on:
+  pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the projects code
+        uses: actions/checkout@v3
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@@v1.0.3
+        id: setup
+
+      - name: Install packer gcp plugin
+        run: packer plugins install github.com/hashicorp/googlecompute
+
+      - name: run packer fmt
+        run: packer fmt -check ./packer_setup
+      
+      - name: run packer validate
+        run: packer validate ./packer_setup
