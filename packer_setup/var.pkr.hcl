@@ -1,21 +1,21 @@
 variable "project_id" {
-  type        = string
+  type = string
 }
 variable "source_image_family" {
-  type        = string
+  type = string
 }
 variable "image_name" {
-  type        = string
+  type = string
 }
 variable "zone" {
-  type        = string
+  type = string
 }
 variable "ssh_username" {
-  type        = string
+  type = string
 }
 variable "dev_deploy_image_name" {
-  default     = "centos-dev-deploy"
+  default = "centos-dev-deploy"
 }
 variable "network" {
-  type        = string
+  type = string
 }
