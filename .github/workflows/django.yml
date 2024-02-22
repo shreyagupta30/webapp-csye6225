@@ -1,7 +1,12 @@
 name: Execute django environment
 
 on:
-  pull_request
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
   build:
