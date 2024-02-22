@@ -26,7 +26,7 @@ jobs:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Install Packer
-        uses: hashicorp/setup-packer@v1.0.3
+        uses: hashicorp/setup-packer@main
         id: setup
 
       - name: Install packer gcp plugin
