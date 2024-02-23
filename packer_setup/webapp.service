@@ -1,0 +1,16 @@
+[Unit]
+Description=Webapp service
+After=network.target
+
+[Service]
+Type=simple
+User=csye6225
+Group=csye6225
+WorkingDirectory=/home/packer/csye6225
+Environment="PATH=/home/packer/.local/bin/pipenv:$PATH"
+ExecStart=/home/packer/.local/share/virtualenv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 webapp.wsgi:application
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

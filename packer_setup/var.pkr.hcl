@@ -14,7 +14,7 @@ variable "ssh_username" {
   type = string
 }
 variable "dev_deploy_image_name" {
-  default = "centos-dev-deploy"
+  type = string
 }
 variable "network" {
   type = string

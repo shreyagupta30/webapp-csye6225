@@ -8,6 +8,14 @@ source "googlecompute" "centos-csye" {
   network             = var.network
 }
 
+source "googlecompute" "centos-csye-deploy" {
+  project_id          = var.project_id
+  source_image        = var.image_name
+  image_name          = var.dev_deploy_image_name
+  ssh_username        = var.ssh_username
+  zone                = var.zone
+}
+
 build {
   sources = ["sources.googlecompute.centos-csye"]
 
@@ -17,3 +25,17 @@ build {
     ]
   }
 }
+
+build {
+  sources = ["source.googlecompute.centos-csye-deploy"]
+  provisioner "file" {
+    source      = "csye6225.zip"
+    destination = "/tmp/csye6225.zip"
+    generated   = "true"
+  }
+  provisioner "shell" {
+    scripts = [
+      "./packer_setup/setup_dependencies.sh",
+    ]
+  }
+  }

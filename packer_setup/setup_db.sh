@@ -37,3 +37,10 @@ else
 
 echo "Setup process completed."
 fi
+
+# Create PostgreSQL user and database
+echo "Setting up PostgreSQL user and database..."
+sudo -u postgres psql -c "CREATE USER admin with PASSWORD 'csye6225';"
+sudo -u postgres psql -c "CREATE DATABASE webapp_csye;"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE webapp_csye to admin;"
+sudo -u postgres psql -c "ALTER DATABASE webapp_csye OWNER TO admin;"

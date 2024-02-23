@@ -20,6 +20,7 @@ jobs:
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_PORT: ${{ secrets.DB_PORT }}
+      DEBUG: true
 
     steps:
       - name: Checkout the projects code
@@ -51,6 +52,21 @@ jobs:
           pip install pipenv
           pipenv install --system --deploy --ignore-pipfile
 
+      - name: Set up environment variables
+        run: |
+          echo "DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}" >> .env
+          echo "DB_NAME=${DB_NAME}" >> .env
+          echo "DB_ENGINE=${DB_ENGINE}" >> .env
+          echo "DB_HOST=${DB_HOST}" >> .env
+          echo "DB_USER=${DB_USER}" >> .env
+          echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+          echo "DB_PORT=${DB_PORT}" >> .env
+          echo "DEBUG=${DEBUG}" >> .env
+
+      - name: zip unzip
+        run: |
+          zip -r csye6225.zip .
+
       - name: Run migrations
         run: |
           python manage.py migrate
@@ -73,4 +89,4 @@ jobs:
         run: packer plugins install github.com/hashicorp/googlecompute
 
       - name: Packer build
-        run: packer build -force -only=googlecompute ./packer_setup
+        run: packer build -force -only=googlecompute.centos-csye-deploy ./packer_setup
