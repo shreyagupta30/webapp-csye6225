@@ -9,11 +9,11 @@ source "googlecompute" "centos-csye" {
 }
 
 source "googlecompute" "centos-csye-deploy" {
-  project_id          = var.project_id
-  source_image        = var.image_name
-  image_name          = var.dev_deploy_image_name
-  ssh_username        = var.ssh_username
-  zone                = var.zone
+  project_id   = var.project_id
+  source_image = var.image_name
+  image_name   = var.dev_deploy_image_name
+  ssh_username = var.ssh_username
+  zone         = var.zone
 }
 
 build {
@@ -38,4 +38,4 @@ build {
       "./packer_setup/setup_dependencies.sh",
     ]
   }
-  }
+}
