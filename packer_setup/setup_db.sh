@@ -4,21 +4,11 @@
 echo "System update in progress..."
 sudo dnf update -y && sudo dnf upgrade -y
 
-# Check and install pip
-if ! command -v pip &> /dev/null; then
-    echo "Installing pip..."
-    sudo dnf install -y python3-pip
-else
-    echo "pip is already present."
-fi
-
-# Install pipenv
-echo "Setting up pipenv..."
-pip3 install pipenv
-
 # Install Python 3.11
 echo "Installing Python 3.11..."
 sudo dnf install -y python3.11
+python3.11 -m ensurepip --default-pip
+pip3.11 install pipenv
 
 # Install PostgreSQL 16 if it's not installed
 if ! command -v psql &> /dev/null; 
