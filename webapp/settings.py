@@ -19,7 +19,7 @@ elif DEBUG == 'False':
 else:
     raise ValueError('DEBUG must be either True or False')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
