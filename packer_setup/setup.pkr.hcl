@@ -1,6 +1,6 @@
-source "googlecompute" "centos-csye"   {
+source "googlecompute" "centos-csye" {
   project_id          = var.project_id
-  source_image_family = var.source_image_family
+  source_image_family = var.source_image_famil
   image_name          = var.image_name
   image_description   = "A custom CentOS Stream 8 image with Python installed"
   ssh_username        = var.ssh_username
