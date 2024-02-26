@@ -1,4 +1,4 @@
-source "googlecompute" "centos-csye" {
+source "googlecompute" "centos-csye"   {
   project_id          = var.project_id
   source_image_family = var.source_image_family
   image_name          = var.image_name
