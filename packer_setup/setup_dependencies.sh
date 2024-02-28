@@ -13,7 +13,6 @@ sudo chown -R csye6225:csye6225 /opt/app
 
 # Install dependencies
 cd /opt/app && pipenv install --python 3.11
-pipenv run python manage.py migrate
 
 #move the service file to /etc/systemd/system
 sudo mv /opt/app/packer_setup/webapp.service /etc/systemd/system
