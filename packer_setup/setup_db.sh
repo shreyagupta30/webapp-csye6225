@@ -10,27 +10,3 @@ sudo dnf install -y python3.11
 python3.11 -m ensurepip --default-pip
 pip3.11 install pipenv
 
-# Install PostgreSQL 16 if it's not installed
-if ! command -v psql &> /dev/null; 
-then
-    echo "PostgreSQL 16 not found. Installing now..."
-    sudo dnf -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-    # Disable the built-in PostgreSQL module
-    sudo dnf -qy module disable postgresql
-    sudo dnf install -y postgresql16-server
-
-    sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
-    sudo systemctl enable postgresql-16
-    sudo systemctl start postgresql-16
-else
-    echo "PostgreSQL 16 is already present."
-
-echo "Setup process completed."
-fi
-
-# Create PostgreSQL user and database
-echo "Setting up PostgreSQL user and database..."
-sudo -u postgres psql -c "CREATE USER admin with PASSWORD 'csye6225';"
-sudo -u postgres psql -c "CREATE DATABASE webapp_csye;"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE webapp_csye to admin;"
-sudo -u postgres psql -c "ALTER DATABASE webapp_csye OWNER TO admin;"
