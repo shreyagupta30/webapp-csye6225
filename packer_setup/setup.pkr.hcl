@@ -31,6 +31,7 @@ build {
   provisioner "file" {
     source      = "csye6225.zip"
     destination = "/tmp/csye6225.zip"
+    generated = true
   }
   provisioner "shell" {
     scripts = [
