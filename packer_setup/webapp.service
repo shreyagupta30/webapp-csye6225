@@ -1,6 +1,7 @@
 [Unit]
 Description=Webapp service
 After=network.target
+ExecStartPre=/opt/app/.env
 
 [Service]
 Type=simple
