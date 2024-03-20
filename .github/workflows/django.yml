@@ -53,8 +53,9 @@ jobs:
 
       - name: Create temp log file for pytest
         run: |
-          mkdir /var/log/app
-          touch /var/log/app/webapp.log
+          sudo mkdir /var/log/app
+          sudo touch /var/log/app/webapp.log
+          ls -la
 
       - name: Run migrations
         run: |
