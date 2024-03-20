@@ -2,6 +2,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
+from webapp.customformatter import JSONFormatter
+
+
 load_dotenv()
 
 
@@ -137,4 +140,33 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
     'EXCEPTION_HANDLER': 'webapp.custom_exception_handler.custom_exception_handler',
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "()": JSONFormatter,
+        },
+    },
+    "handlers": {
+        "json-file": {
+            "class": "logging.FileHandler",
+            "filename": "/var/log/app/webapp.log",
+            "formatter": "json",
+        },
+    },
+    "loggers": {
+        "django": {
+            "level": "ERROR",
+            "handlers": ["json-file"],
+            "propagate": False,
+        },
+        "": {
+            "handlers": ["json-file"],
+            "propagate": False,
+            "level": "INFO",
+        },
+    },
 }

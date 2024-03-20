@@ -25,3 +25,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
 sudo systemctl start webapp.service
 # sudo systemctl status webapp.service
+
+#move config file to /etc/google-cloud-ps-agent
+sudo mv /opt/app/packer_setup/config.yaml /etc/google-cloud-ops-agent
+sudo chown -R csye6225:csye6225 /var/log/app
