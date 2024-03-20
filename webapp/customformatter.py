@@ -3,7 +3,7 @@ import datetime
 
 
 class JSONFormatter(json_log_formatter.JSONFormatter):
-    def format(self, record, datefmt=None):
+    def format_(self, record, datefmt=None):
         date_format = datetime.datetime.fromtimestamp(record.created)
         if datefmt:
             seconds = date_format.strftime(datefmt)
@@ -14,6 +14,6 @@ class JSONFormatter(json_log_formatter.JSONFormatter):
 
     def json_(self, message, data, record):
         data['severity'] = record.levelname
-        data['time'] = self.format(record)
+        data['time'] = self.format_(record)
         data['message'] = message
         return super(JSONFormatter, self).json_(message, data, record)
