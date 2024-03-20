@@ -51,6 +51,12 @@ jobs:
         run: |
           pip install pipenv
           pipenv install --system --deploy --ignore-pipfile
+      
+      - name: Create temp log file for pytest
+        run: |
+          sudo mkdir /var/log/app
+          sudo touch /var/log/app/webapp.log
+          sudo chown -R $USER:$USER /var/log/app
 
       - name: Run migrations
         run: |
