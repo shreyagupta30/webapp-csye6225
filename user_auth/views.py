@@ -18,7 +18,7 @@ class UserAuthViewSet(GenericAPIView):
         if not serializer.is_valid():
             logger.error("UserAuthViewSet: Invalid request body is provided")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        logger.debug("GetUserAuthViewSet: The user information is updated")
+        logger.debug("GetUserAuthViewSet: The user information is saved")
         serializer.save()
         logger.info("UserAuthViewSet: POST method is successful")
         return Response(serializer.data, status=status.HTTP_201_CREATED)
