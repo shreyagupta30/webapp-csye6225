@@ -10,6 +10,7 @@ from django.core import signing
 from django.conf import settings
 from user_auth.models import User, UserEmailVerificationTrack
 from django.utils import timezone
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -35,19 +36,20 @@ class UserAuthViewSet(GenericAPIView):
         logger.debug("GetUserAuthViewSet: The user information is saved")
         serializer.save()
         logger.info("UserAuthViewSet: POST method is successful")
-        try:
-            send_to_pub_sub(
-                {
-                    "id": serializer.data["id"],
-                    "firstname": serializer.data["firstname"],
-                    "lastname": serializer.data["lastname"],
-                    "email": serializer.data["username"],
-                    "token": signing.dumps(str(serializer.data["id"]))
-                }
-            )
-        except Exception as e:
-            logger.error(f"UserAuthViewSet: Error in sending data to pubsub: {e}")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if not settings.TESTING:
+            try:
+                send_to_pub_sub(
+                    {
+                        "id": serializer.data["id"],
+                        "firstname": serializer.data["firstname"],
+                        "lastname": serializer.data["lastname"],
+                        "email": serializer.data["username"],
+                        "token": signing.dumps(str(serializer.data["id"]))
+                    }
+                )
+            except Exception as e:
+                logger.error(f"UserAuthViewSet: Error in sending data to pubsub: {e}")
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class GetUserAuthViewSet(GenericAPIView):
