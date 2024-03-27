@@ -16,5 +16,6 @@ pytest-django = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 json-log-formatter = "*"
+google-cloud-pubsub = "*"
 
 [dev-packages]
