@@ -6,7 +6,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'firstname','lastname', 'password', 'account_created', 'account_updated')
+        fields = ('id', 'username', 'firstname','lastname', 'password', 'account_created', 'account_updated', 'is_verified')
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -17,7 +17,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'password', 'firstname','lastname', 'account_created', 'account_updated')
+        fields = ('id', 'password', 'firstname','lastname', 'account_created', 'account_updated', 'is_verified')
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)

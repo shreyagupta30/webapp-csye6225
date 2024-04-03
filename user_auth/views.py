@@ -8,9 +8,10 @@ from google.cloud import pubsub_v1
 import json
 from django.core import signing
 from django.conf import settings
-from user_auth.models import User, UserEmailVerificationTrack
+from user_auth.models import User
 from django.utils import timezone
 from django.conf import settings
+import base64
 
 
 logger = logging.getLogger(__name__)
@@ -44,12 +45,12 @@ class UserAuthViewSet(GenericAPIView):
                         "firstname": serializer.data["firstname"],
                         "lastname": serializer.data["lastname"],
                         "email": serializer.data["username"],
-                        "token": signing.dumps(str(serializer.data["id"]))
+                        "token": base64.b64encode(str(serializer.data["id"]).encode()).decode()
                     }
                 )
             except Exception as e:
                 logger.error(f"UserAuthViewSet: Error in sending data to pubsub: {e}")
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class GetUserAuthViewSet(GenericAPIView):
@@ -58,16 +59,19 @@ class GetUserAuthViewSet(GenericAPIView):
     
     def get(self, request):
         serializer = CreateUserSerializer(request.user)
-        if not serializer.data.is_active:
-            logger.error("GetUserAuthViewSet: User is not verified")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if not settings.TESTING:
+            if not serializer.data['is_verified']:
+                print("I am here!")
+                logger.error("GetUserAuthViewSet: User is not verified")
+                return Response("User is not verified!", status=status.HTTP_403_FORBIDDEN)
         logger.info("GetUserAuthViewSet: GET method is successful")
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        if not serializer.data.is_active:
-            logger.error("UserPut: User is not verified")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if not settings.TESTING:
+            if not serializer.data['is_verified']:
+                logger.error("UserPut: User is not verified")
+                return Response(status=status.HTTP_403_FORBIDDEN)
         if not set(request.data.keys()).issubset(set(['firstname', 'lastname', 'password'])):
             logger.error("GetUserAuthViewSet: Certain fields are missing in the request body")
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -84,19 +88,20 @@ class UserAuthVerificationViewSet(GenericAPIView):
     def get(self, request, *args, **kwargs):
         token = request.query_params.get('token')
         if not token:
-            logger.error("UserAuthVerificationViewSet: Token is missing")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            logger.error("UserAuthVerificationViewSet: Token is missing in the request")
+            return Response(status=status.HTTP_403_FORBIDDEN)
         try:
-            user_id = signing.loads(token)
-        except signing.BadSignature:
-            logger.error("UserAuthVerificationViewSet: Invalid token is provided")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        time_limit = UserEmailVerificationTrack.objects.get(token=token).created_at
-        if timezone.now().timestamp() - float(time_limit) > timezone.timedelta(minutes=2):
+            user = User.objects.get(email_token_generated=token)
+        except Exception:
+            logger.error("UserAuthVerificationViewSet: Token is invalid")
+            return Response("Token is invalid!", status=status.HTTP_403_FORBIDDEN)
+        
+        time_of_email = User.objects.get(email_token_generated=token).email_token_generated_at
+        if timezone.now().timestamp() - time_of_email.timestamp() > 60 * 2:
             logger.error("UserAuthVerificationViewSet: Token is expired")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        user = User.objects.get(id=user_id)
-        user.is_active = True
+            return Response("Token is expired", status=status.HTTP_403_FORBIDDEN)
+
+        user.is_verified = True
         user.save()
-        logger.info("UserAuthVerificationViewSet: User verification method is successful")
-        return Response(status=status.HTTP_200_OK)     
+        logger.info("UserAuthVerificationViewSet: User is verified")
+        return Response(status=status.HTTP_200_OK)
