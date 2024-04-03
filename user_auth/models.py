@@ -35,9 +35,12 @@ class User(AbstractBaseUser):
     lastname = models.CharField(max_length=254)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     account_created = models.DateTimeField(auto_now_add=True)
     account_updated = models.DateTimeField(auto_now=True)
+    is_verified = models.BooleanField(default=False)
+    email_token_generated = models.CharField(max_length=255, blank=True, null=True)
+    email_token_generated_at = models.DateTimeField(blank=True, null=True)
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'username'
@@ -46,12 +49,4 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     def __str__(self):
-        return self.email
-
-class UserEmailVerificationTrack(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=255)
-    created_at = models.DateTimeField()
-
-    def __str__(self):
-        return self.email
+        return str(self.id)

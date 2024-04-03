@@ -8,7 +8,7 @@ from webapp.customformatter import JSONFormatter
 
 load_dotenv()
 
-TESTING = "pytest" in sys.argv
+TESTING = os.path.basename(sys.argv[0]) in ('pytest', 'py.test')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
