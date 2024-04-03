@@ -28,6 +28,7 @@ class UserAuthViewSet(GenericAPIView):
 
     def post(self, request):
         serializer = CreateUserSerializer(data=request.data)
+        print(serializer.data)
         if not set(request.data.keys()).issubset(set(['firstname', 'lastname', 'password', 'username'])):
             logger.error("UserAuthViewSet: Certain fields are missing in the request body")
             return Response(status=status.HTTP_400_BAD_REQUEST)
