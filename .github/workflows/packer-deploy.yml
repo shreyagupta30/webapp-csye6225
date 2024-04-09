@@ -62,6 +62,9 @@ jobs:
         run: |
           python manage.py migrate
 
+      - name: Run tests
+        run: |
+          pytest
 
       - name: zip unzip
         run: |
