@@ -23,7 +23,6 @@ def send_to_pub_sub(data):
     data["id"] = str(data["id"])
     data = json.dumps(data).encode("utf-8")
     publish.publish(topic_path, data)
-
 class UserAuthViewSet(GenericAPIView):
 
     def post(self, request):
@@ -67,11 +66,12 @@ class GetUserAuthViewSet(GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
+        serializer = UpdateUserSerializer(request.user)
         if not settings.TESTING:
             if not serializer.data['is_verified']:
                 logger.error("UserPut: User is not verified")
                 return Response(status=status.HTTP_403_FORBIDDEN)
-        if not set(request.data.keys()).issubset(set(['firstname', 'lastname', 'password'])):
+        if not set(request.data.keys()) .issubset(set(['firstname', 'lastname', 'password'])):
             logger.error("GetUserAuthViewSet: Certain fields are missing in the request body")
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = UpdateUserSerializer(request.user, data=request.data, partial=True)
