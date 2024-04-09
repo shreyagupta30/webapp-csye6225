@@ -1,4 +1,4 @@
-project_id            = "lateral-scion-414218"
+project_id            = "csye-6225-419603"
 source_image_family   = "centos-stream-8"
 image_name            = "centos-csye"
 zone                  = "us-east4-a"
