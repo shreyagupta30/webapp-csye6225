@@ -115,7 +115,8 @@ jobs:
             --region=us-central1 \
             --network=cyse-vpc \
             --subnet=webapp \
-            --service-account=service-account-id@eng-wharf-414218.iam.gserviceaccount.com \
+            --service-account=service-account-id@csye-6225-419603.iam.gserviceaccount.com \
+            ----boot-disk-kms-key=projects/csye-6225-419603/locations/us-east4/keyRings/keyring-bee0c74a/cryptoKeys/vm-key-bee0c74a \
             --tags=load-balanced-backend \
             --metadata=startup-script='#!/bin/bash
             # Create .env file
