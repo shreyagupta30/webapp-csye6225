@@ -145,7 +145,7 @@ jobs:
         run: |
           gcloud compute instance-groups managed rolling-action start-update ${{ secrets.INSTANCE_GROUP_NAME }} \
             --version=template=csye-webapp-${{github.sha}} \
-            --zone= us-east4-a
+            --zone=us-east4-a
       
       - name: Check the status of the rolling update
         run: |
