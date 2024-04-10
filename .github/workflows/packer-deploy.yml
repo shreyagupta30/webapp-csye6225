@@ -138,7 +138,7 @@ jobs:
       - name: Point the instance group to the new template
         run: |
           gcloud compute instance-groups managed set-instance-template ${{ secrets.INSTANCE_GROUP_NAME }} \
-            --template=webapp-instance-${{github.sha}} \
+            --template=csye-webapp-instance-${{github.sha}} \
             --zone=us-east4-a
 
       - name: Re-create instances in instance group
