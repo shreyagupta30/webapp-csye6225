@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -112,8 +115,8 @@ jobs:
             --machine-type=e2-medium \
             --boot-disk-auto-delete \
             --image=centos-dev-deploy-${{ github.sha }} \
-            --region=us-central1 \
-            --network=cyse-vpc \
+            --region=us-east4 \
+            --network=assignment-tf \
             --subnet=webapp \
             --service-account=service-account-id@csye-6225-419603.iam.gserviceaccount.com \
             ----boot-disk-kms-key=projects/csye-6225-419603/locations/us-east4/keyRings/keyring-bee0c74a/cryptoKeys/vm-key-bee0c74a \
