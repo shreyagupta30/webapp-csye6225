@@ -138,13 +138,13 @@ jobs:
       - name: Point the instance group to the new template
         run: |
           gcloud compute instance-groups managed set-instance-template ${{ secrets.INSTANCE_GROUP_NAME }} \
-            --template=csye-webapp-instance-${{github.sha}} \
+            --template=csye-webapp-${{github.sha}} \
             --zone=us-east4-a
 
       - name: Re-create instances in instance group
         run: |
           gcloud compute instance-groups managed rolling-action start-update ${{ secrets.INSTANCE_GROUP_NAME }} \
-            --version=template=csye-webapp-instance-${{github.sha}} \
+            --version=template=csye-webapp-${{github.sha}} \
             --zone= us-east4-a
       
       - name: Check the status of the rolling update
