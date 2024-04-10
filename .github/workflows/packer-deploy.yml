@@ -144,7 +144,7 @@ jobs:
       - name: Re-create instances in instance group
         run: |
           gcloud compute instance-groups managed rolling-action start-update ${{ secrets.INSTANCE_GROUP_NAME }} \
-            --version=template=webapp-instance-${{github.sha}} \
+            --version=template=csye-webapp-instance-${{github.sha}} \
             --zone= us-east4-a
       
       - name: Check the status of the rolling update
