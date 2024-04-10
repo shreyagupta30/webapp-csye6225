@@ -86,7 +86,7 @@ jobs:
         run: packer plugins install github.com/hashicorp/googlecompute
 
       - name: Packer build
-        run: packer build -force -only=googlecompute.centos-csye-deploy -var 'dev_deploy_image_name=centos-dev-deploy-${{ github.sha }}' ./packer_setup
+        run: packer build -force -only=googlecompute.centos-csye-deploy -var 'dev_deploy_image_name=centos-dev-deploy-${{ github.sha }}' ./packer_setup/
 
       - name: Get Secrets from Secret Manager
         run: |
