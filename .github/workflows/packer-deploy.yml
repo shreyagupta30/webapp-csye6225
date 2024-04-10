@@ -86,4 +86,64 @@ jobs:
         run: packer plugins install github.com/hashicorp/googlecompute
 
       - name: Packer build
-        run: packer build -force -only=googlecompute.centos-csye-deploy ./packer_setup
+        run: packer build -force only=googlecompute.centos-csye-deploy -var 'dev_deploy_image_name=centos-dev-deploy-${{ github.sha }}' ./packer_setup/
+
+      - name: Get Secrets from Secret Manager
+        run: |
+          SECRET_JSON=$(gcloud secrets versions access latest --secret=my_secrets)
+
+          declare -A SECRETS_DICT
+          while IFS="=" read -r key value
+          do
+              SECRETS_DICT["$key"]="$value"
+          done < <(echo $SECRET_JSON | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]")
+
+          echo "DATABASE_HOST=${SECRETS_DICT["DB_HOST"]}" >> $GITHUB_ENV
+          echo "DATABASE_USER=${SECRETS_DICT["DB_USER"]}" >> $GITHUB_ENV
+          echo "DATABASE_PASSWORD=${SECRETS_DICT["DB_PASSWORD"]}" >> $GITHUB_ENV
+          echo "DATABASE_NAME=${SECRETS_DICT["DB_NAME"]}" >> $GITHUB_ENV
+          echo "DJ_SECRET_KEY=${SECRETS_DICT["DJANGO_SECRET_KEY"]}" >> $GITHUB_ENV
+          echo "GCP_PROJECT_ID=${SECRETS_DICT["GCP_PROJECT_ID"]}" >> $GITHUB_ENV
+          echo "GCP_PUBSUB_TOPIC=${SECRETS_DICT["GCP_PUBSUB_TOPIC"]}" >> $GITHUB_ENV
+
+      - name: Create new VM template
+        run: |
+          gcloud compute instance-templates create csye-webapp-${{github.sha}} \
+            --machine-type=e2-medium \
+            --boot-disk-auto-delete \
+            --image=centos-dev-deploy-${{ github.sha }} \
+            --region=us-central1 \
+            --network=cyse-vpc \
+            --subnet=webapp \
+            --service-account=service-account-id@eng-wharf-414218.iam.gserviceaccount.com \
+            --tags=load-balanced-backend \
+            --metadata=startup-script='#!/bin/bash
+            # Create .env file
+            touch /opt/app/.env
+
+            cat > /opt/app/.env <<EOF
+            DB_HOST=${{ env.DATABASE_HOST }}
+            DB_USER=${{ env.DATABASE_USER }}
+            DB_PASSWORD=${{ env.DATABASE_PASSWORD }}
+            DB_NAME=${{ env.DATABASE_NAME }}
+            DJANGO_SECRET_KEY=${{ env.DJ_SECRET_KEY }}
+            GOOGLE_CLOUD_PROJECT_ID=${{ env.GCP_PROJECT_ID }}
+            GOOGLE_CLOUD_PUBSUB_TOPIC_NAME=${{ env.GCP_PUBSUB_TOPIC }}
+            EOF'
+      
+      - name: Point the instance group to the new template
+        run: |
+          gcloud compute instance-groups managed set-instance-template ${{ secrets.INSTANCE_GROUP_NAME }} \
+            --template=webapp-instance-${{github.sha}} \
+            --zone=us-east4-a
+
+      - name: Re-create instances in instance group
+        run: |
+          gcloud compute instance-groups managed rolling-action start-update ${{ secrets.INSTANCE_GROUP_NAME }} \
+            --version=template=webapp-instance-${{github.sha}} \
+            --zone= us-east4-a
+      
+      - name: Check the status of the rolling update
+        run: |
+          gcloud compute instance-groups managed wait-until ${{ secrets.INSTANCE_GROUP_NAME }} \
+              --version-target-reached --zone=us-east4-a
