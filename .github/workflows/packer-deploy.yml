@@ -93,7 +93,7 @@ jobs:
 
       - name: Get Secrets from Secret Manager
         run: |
-          SECRET_JSON=$(gcloud secrets versions access latest --secret=my_secrets)
+          SECRET_JSON=$(gcloud secrets versions access latest --secret=project_secrets)
 
           declare -A SECRETS_DICT
           while IFS="=" read -r key value
