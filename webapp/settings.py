@@ -2,6 +2,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 import sys
 import os
+import json_log_formatter
+import datetime
 
 from webapp.customformatter import JSONFormatter
 
@@ -143,6 +145,23 @@ REST_FRAMEWORK = {
     ],
     'EXCEPTION_HANDLER': 'webapp.custom_exception_handler.custom_exception_handler',
 }
+class CustomJSONFormatter(json_log_formatter.JSONFormatter):
+    """Custom JSON formatter for logs."""
+
+    def formatTime(self, record, datefmt=None):
+        ct = datetime.datetime.fromtimestamp(record.created)
+        if datefmt:
+            s = ct.strftime(datefmt)
+        else:
+            t = ct.strftime("%Y-%m-%dT%H:%M")
+            s = "%sZ" % t
+        return s
+
+    def json_record(self, message, extra, record):
+        extra["severity"] = record.levelname
+        extra["time"] = self.formatTime(record)
+        extra["message"] = message
+        return super(CustomJSONFormatter, self).json_record(message, extra, record)
 
 LOGGING = {
     "version": 1,
