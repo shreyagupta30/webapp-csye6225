@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -116,7 +119,7 @@ jobs:
             --network=cyse-vpc \
             --subnet=webapp \
             --service-account=service-account-id@csye-6225-419603.iam.gserviceaccount.com \
-            ----boot-disk-kms-key=projects/csye-6225-419603/locations/us-east4/keyRings/keyring-bee0c74a/cryptoKeys/vm-key-bee0c74a \
+            ----boot-disk-kms-key=projects/csye-6225-419603/locations/us-east4/keyRings/keyring-14a25517/cryptoKeys/vm-key-14a25517 \
             --tags=load-balanced-backend \
             --metadata=startup-script='#!/bin/bash
             # Create .env file
