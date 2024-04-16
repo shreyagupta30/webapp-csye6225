@@ -93,7 +93,7 @@ jobs:
 
       - name: Get Secrets from Secret Manager
         run: |
-          SECRET_JSON=$(gcloud secrets versions access latest --secret=my_secrets)
+          SECRET_JSON=$(gcloud secrets versions access latest --secret=project_secrets)
 
           declare -A SECRETS_DICT
           while IFS="=" read -r key value
@@ -119,7 +119,7 @@ jobs:
             --network=assignment-tf \
             --subnet=webapp \
             --service-account=service-account-id@csye-6225-419603.iam.gserviceaccount.com \
-            ----boot-disk-kms-key=projects/csye-6225-419603/locations/us-east4/keyRings/keyring-14a25517/cryptoKeys/vm-key-14a25517 \
+            --boot-disk-kms-key=projects/csye-6225-419603/locations/us-east4/keyRings/keyring-14a25517/cryptoKeys/vm-key-14a25517 \
             --tags=load-balanced-backend \
             --metadata=startup-script='#!/bin/bash
             # Create .env file
@@ -138,14 +138,14 @@ jobs:
       - name: Point the instance group to the new template
         run: |
           gcloud compute instance-groups managed set-instance-template ${{ secrets.INSTANCE_GROUP_NAME }} \
-            --template=webapp-instance-${{github.sha}} \
+            --template=csye-webapp-${{github.sha}} \
             --zone=us-east4-a
 
       - name: Re-create instances in instance group
         run: |
           gcloud compute instance-groups managed rolling-action start-update ${{ secrets.INSTANCE_GROUP_NAME }} \
-            --version=template=webapp-instance-${{github.sha}} \
-            --zone= us-east4-a
+            --version=template=csye-webapp-${{github.sha}} \
+            --zone=us-east4-a
       
       - name: Check the status of the rolling update
         run: |
