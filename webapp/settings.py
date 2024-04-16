@@ -176,7 +176,7 @@ LOGGING = {
     "handlers": {
         "file": {
             "class": "logging.FileHandler",
-            "filename": "/var/log/app/logs.log",
+            "filename": "/var/log/app/webapp.log",
             "formatter": "json",
         },
     },
